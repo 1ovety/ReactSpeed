@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="eg">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Recat Speed</title>
+    <style>
+      #display {
+        width: 300px;
+        height: 250px;
+        text-align: center;
+        user-select: none;
+        font-size: 25px;
+        font-weight: bold;
+      }
+
+      #display.holdOn {
+        background: Orange;
+      }
+
+      #display.ready {
+        background: purple;
+      }
+
+      #display.start {
+        background: greenyellow;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <div id="display" class="waiting">Click to start</div>
+    <div id="game"></div>
+
+    <script>
+      
+      const display = document.querySelector('#display');
+
+      let begin;
+      let finish;
+      let count = 0;
+      let sec = [];
+      let sum = 0;
+      let averageTime = 0;
+      let timer;
+
+      display.addEventListener('click', function() {
+        if (display.classList.contains('holdOn')) {
+          display.classList.remove('holdOn');
+          display.classList.add('ready');
+          display.textContent = 'keep eyes on it until it change to green';
+
+        // the the display became ready, the timer work 
+            timer = setTimeout(function() {
+            begin = new Date();
+            display.click();
+          }, Math.floor(Math.random() * 1000) + 2000); // random time between 2sec and 3 sec
+
+        } else if (display.classList.contains('holdOn')) {
+          // if user click the button even it was not ready
+          if (!begin) { //if display is not begin it should not be successed
+            clearTimeout(timer); 
+            display.classList.remove('holdOn');
+            display.classList.add('holdOn');
+            display.textContent = 'Dont click it';
+
+          } else {
+
+            display.classList.remove('ready');
+            display.classList.add('start');
+            display.textContent = 'Click Now!!!!!!';
+
+          }
+
+        } else if (display.classList.contains('start')) {
+
+          finish = new Date();
+          result = (finish - begin) / 1000
+          console.log(result + 'sec');
+          count += 1;
+          set.push(result);
+
+          display.classList.remove('start');
+          display.classList.add('holdOn');
+          display.textContent = 'Click here to start';
+
+          //reset
+          begin = null;
+          finish = null;
+
+        }
+
+        if (count >= 3) {
+          for (let i = 0; i < set.length; i++) {
+            sum = sum + set[i]
+          }
+          
+          averageSpeed = sum / set.length;
+          console.log(count, set, sum, averageTime);
+          document.querySelector('#game').textContent = `your average speed is ${averageTime.toFixed(2)}.`;
+
+          setTimeout(function() {
+            backtoBegin();
+          }, 2000);
+
+        }
+
+        //reset
+        function backtoBegin() {
+          count = 0;
+          document.querySelector('#game').textContent = '';
+        }
+      });
+
+    </script>
+
+</body>
+
+
+</html>
+
+<!-- reference from https://goddino.tistory.com/108?category=902116 -->
